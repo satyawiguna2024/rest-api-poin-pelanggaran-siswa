@@ -1,0 +1,20 @@
+tolong bantu saya buat code, yaitu pembuatan rest api authentication dengan jwt token. jadi disini yang saya pakai yaitu menggunakan PHP FREAMWORK SLIM agar bisa membuat rest apinya. jadi package package composer:
+
+```
+{
+    "require": {
+        "slim/slim": "^4.15",
+        "slim/psr7": "^1.8",
+        "firebase/php-jwt": "^7.0",
+        "php-di/php-di": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
+```
+
+
+dan structur folder saya itu di foto yang saya kirim dengan database design foto kedua yang saya kirim tolong ajarkan saya sampai rest api authentication nya ini selesai hingga tuntas. jadi kamu berperan sebagai senior rest api yang sangat detail dan teliti buat junior nya yang seperti saya ini. tolong berbicara dengan santai dan akrab kepada saya yak. ingat jika ada perubahan beritahu saya yang kamu rubah dan package juga sama beritahu saya jika terdapat perubahan untuk structur folder beritahu saya jika itu berubah dan berikan penjelasan kenapa perubahan itu terjadi
