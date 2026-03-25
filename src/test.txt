@@ -18,3 +18,6 @@ tolong bantu saya buat code, yaitu pembuatan rest api authentication dengan jwt 
 
 
 disini coba baca dulu set up structure folder saya. lalu disini yang saya inginkan itu untuk bagian membuat data users atau akun hanya bisa dilakukan oleh admin saja. dia bisa membuat akun users dengan role guru, dan siswa. nanti role role tersebut tinggal login aja untuk register hanya bisa dilakukan oleh role admin jadi bagaimana caranya ya? langsung aja implementasikan dengan code dan jangan lupa untuk jelaskan kepada saya. dan kenapa, mengapa harus menggunakan seperti itu?
+
+
+disini coba kamu baca database nya. jika sudah sekarang saya ingin bertanya, disini setiap admin membuat akun kan ada 2 role yaitu siswa dan guru tapi yang saya inginkan admin langsung membuat data personal nya juga khusus role kedua itu tapi dengan table db dan field column yang berbeda. gimana caranya?
