@@ -25,7 +25,7 @@ class UsersRepositories
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function create(array $data): bool
+  public function create(array $data)
   {
     $stmt = $this->db->prepare("
         INSERT INTO users (username, email, password, role, status)

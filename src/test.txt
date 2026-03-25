@@ -17,4 +17,4 @@ tolong bantu saya buat code, yaitu pembuatan rest api authentication dengan jwt 
 ```
 
 
-dan structur folder saya itu di foto yang saya kirim dengan database design foto kedua yang saya kirim tolong ajarkan saya sampai rest api authentication nya ini selesai hingga tuntas. jadi kamu berperan sebagai senior rest api yang sangat detail dan teliti buat junior nya yang seperti saya ini. tolong berbicara dengan santai dan akrab kepada saya yak. ingat jika ada perubahan beritahu saya yang kamu rubah dan package juga sama beritahu saya jika terdapat perubahan untuk structur folder beritahu saya jika itu berubah dan berikan penjelasan kenapa perubahan itu terjadi
+disini coba baca dulu set up structure folder saya. lalu disini yang saya inginkan itu untuk bagian membuat data users atau akun hanya bisa dilakukan oleh admin saja. dia bisa membuat akun users dengan role guru, dan siswa. nanti role role tersebut tinggal login aja untuk register hanya bisa dilakukan oleh role admin jadi bagaimana caranya ya? langsung aja implementasikan dengan code dan jangan lupa untuk jelaskan kepada saya. dan kenapa, mengapa harus menggunakan seperti itu?

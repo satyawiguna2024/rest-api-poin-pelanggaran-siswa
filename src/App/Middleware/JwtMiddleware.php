@@ -23,7 +23,10 @@ class JwtMiddleware
     $token = str_replace('Bearer ', '', $auth);
 
     try {
-      JWT::decode($token, new Key($this->secret, 'HS256'));
+      $decoded = JWT::decode($token, new Key($this->secret, 'HS256'));
+      
+      // Simpan user data ke request untuk diakses di controller
+      $request = $request->withAttribute('user', $decoded);
     } catch (\Exception $e) {
       return $this->unauthorized();
     }
