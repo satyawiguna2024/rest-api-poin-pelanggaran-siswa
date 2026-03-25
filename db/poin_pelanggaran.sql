@@ -24,6 +24,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `nuptk` varchar(20) NOT NULL,
+  `id_users` int NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `alamat` text,
+  `tanggal_lahir` date NOT NULL,
+  `jenis_kelamin` enum('L','P') NOT NULL,
+  `agama` varchar(30) NOT NULL,
+  `telepon` varchar(20) DEFAULT NULL,
+  `jabatan` varchar(50) DEFAULT 'admin sekolah',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `guru`
 --
 
@@ -156,6 +176,13 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `status`, `role`, `c
 --
 
 --
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`nuptk`),
+  ADD KEY `fk_admin_users` (`id_users`);
+
+--
 -- Indexes for table `guru`
 --
 ALTER TABLE `guru`
@@ -231,6 +258,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `admin`
+--
+ALTER TABLE `admin`
+  ADD CONSTRAINT `fk_admin_users` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `guru`

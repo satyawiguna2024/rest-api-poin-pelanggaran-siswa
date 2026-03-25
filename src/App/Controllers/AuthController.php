@@ -66,74 +66,15 @@ class AuthController
   public function registerAdmin(Request $request, Response $response)
   {
     $data = (array) $request->getParsedBody();
+    $data['role'] = 'admin';
 
-    //Validasi input
-    if (empty($data['username']) || empty($data['email']) || empty($data['password'])) {
-      $response->getBody()->write(json_encode([
-        'message' => 'Username, email, dan password harus diisi'
-      ]));
-      return $response->withStatus(400);
-    }
-
-    //Mengecek apakah username sudah terdaftar
-    if ($this->users->findByUsername($data['username'])) {
-      $response->getBody()->write(json_encode([
-        'message' => 'Username sudah terdaftar'
-      ]));
-      return $response->withStatus(409);
-    }
-
-    if ($this->users->findByEmail($data['email'])) {
-      $response->getBody()->write(json_encode([
-        'message' => 'Email sudah terdaftar'
-      ]));
-      return $response->withStatus(409);
-    }
-
-    //Validasi format email (basic validation)
-    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-      $response->getBody()->write(json_encode([
-        'message' => 'Format email tidak valid'
-      ]));
-      return $response->withStatus(400);
-    }
-
-    //Validasi panjang password (minimal 6 karakter)
-    if (strlen($data['password']) < 6) {
-      $response->getBody()->write(json_encode([
-        'message' => 'Password minimal 6 karakter'
-      ]));
-      return $response->withStatus(400);
-    }
-
-    //Hash password dengan bcrypt
-    $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
-
-    try {
-      $this->users->create([
-        'username' => trim($data['username']),
-        'email' => trim($data['email']),
-        'password' => $hashedPassword,
-        'role' => 'admin'
-      ]);
-
-      $response->getBody()->write(json_encode([
-        'message' => 'Admin berhasil dibuat! Silakan login',
-        'data' => [
-          'username' => $data['username'],
-          'email' => $data['email'],
-          'role' => 'admin'
-        ]
-      ]));
-
-      return $response->withStatus(201);
-    } catch (\Exception $e) {
-      $response->getBody()->write(json_encode([
-        'message' => 'Gagal membuat admin',
-        'error' => $e->getMessage()
-      ]));
-      return $response->withStatus(500);
-    }
+    return $this->createAccountWithProfile(
+      $data,
+      $response,
+      'Admin berhasil dibuat! Silakan login',
+      null,
+      'Gagal membuat admin'
+    );
   }
 
   // function create user khusus admin
@@ -145,6 +86,11 @@ class AuthController
   public function createGuru(Request $request, Response $response)
   {
     return $this->createUserByRole($request, $response, 'guru');
+  }
+
+  public function createAdmin(Request $request, Response $response)
+  {
+    return $this->createUserByRole($request, $response, 'admin');
   }
 
   public function createSiswa(Request $request, Response $response)
@@ -194,10 +140,26 @@ class AuthController
       $data['role'] = $forcedRole;
     }
 
-    // Validasi role hanya boleh guru atau siswa
-    if (empty($data['role']) || !in_array($data['role'], ['guru', 'siswa'], true)) {
+    return $this->createAccountWithProfile(
+      $data,
+      $response,
+      'User dan data personal berhasil dibuat',
+      $adminUser->role,
+      'Gagal membuat user'
+    );
+  }
+
+  private function createAccountWithProfile(
+    array $data,
+    Response $response,
+    string $successMessage,
+    ?string $createdBy = null,
+    string $failureMessage = 'Gagal membuat user'
+  )
+  {
+    if (empty($data['role']) || !in_array($data['role'], ['admin', 'guru', 'siswa'], true)) {
       $response->getBody()->write(json_encode([
-        'message' => 'Role hanya boleh "guru" atau "siswa"'
+        'message' => 'Role hanya boleh "admin", "guru", atau "siswa"'
       ]));
       return $response->withStatus(400);
     }
@@ -213,7 +175,7 @@ class AuthController
       'agama'
     ];
 
-    if ($data['role'] === 'guru') {
+    if (in_array($data['role'], ['admin', 'guru'], true)) {
       $requiredFields[] = 'nuptk';
     }
 
@@ -259,7 +221,6 @@ class AuthController
       return $response->withStatus(400);
     }
 
-    // Cek apakah username sudah terdaftar
     if ($this->users->findByUsername(trim($data['username']))) {
       $response->getBody()->write(json_encode([
         'message' => 'Username sudah terdaftar'
@@ -274,9 +235,16 @@ class AuthController
       return $response->withStatus(409);
     }
 
+    if ($data['role'] === 'admin' && $this->users->findAdminByNuptk(trim($data['nuptk']))) {
+      $response->getBody()->write(json_encode([
+        'message' => 'NUPTK admin sudah terdaftar'
+      ]));
+      return $response->withStatus(409);
+    }
+
     if ($data['role'] === 'guru' && $this->users->findGuruByNuptk(trim($data['nuptk']))) {
       $response->getBody()->write(json_encode([
-        'message' => 'NUPTK sudah terdaftar'
+        'message' => 'NUPTK guru sudah terdaftar'
       ]));
       return $response->withStatus(409);
     }
@@ -288,7 +256,6 @@ class AuthController
       return $response->withStatus(409);
     }
 
-    // Hash password
     $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
 
     $payload = [
@@ -304,9 +271,10 @@ class AuthController
       'telepon' => $this->normalizeNullableString($data['telepon'] ?? null)
     ];
 
-    if ($data['role'] === 'guru') {
+    if (in_array($data['role'], ['admin', 'guru'], true)) {
       $payload['nuptk'] = trim($data['nuptk']);
-      $payload['jabatan'] = $this->normalizeNullableString($data['jabatan'] ?? null) ?? 'guru ngajar';
+      $payload['jabatan'] = $this->normalizeNullableString($data['jabatan'] ?? null)
+        ?? ($data['role'] === 'admin' ? 'admin sekolah' : 'guru ngajar');
     }
 
     if ($data['role'] === 'siswa') {
@@ -321,23 +289,27 @@ class AuthController
 
     try {
       $createdUser = $this->users->createUserWithProfile($payload);
+      $responseData = [
+        'id_users' => $createdUser['user_id'],
+        'username' => $payload['username'],
+        'email' => $payload['email'],
+        'role' => $data['role'],
+        $createdUser['profile_key'] => $createdUser['profile_value']
+      ];
+
+      if ($createdBy !== null) {
+        $responseData['created_by'] = $createdBy;
+      }
 
       $response->getBody()->write(json_encode([
-        'message' => 'User dan data personal berhasil dibuat',
-        'data' => [
-          'id_users' => $createdUser['user_id'],
-          'username' => $payload['username'],
-          'email' => $payload['email'],
-          'role' => $data['role'],
-          $createdUser['profile_key'] => $createdUser['profile_value'],
-          'created_by' => $adminUser->role
-        ]
+        'message' => $successMessage,
+        'data' => $responseData
       ]));
 
       return $response->withStatus(201);
     } catch (\Exception $e) {
       $response->getBody()->write(json_encode([
-        'message' => 'Gagal membuat user',
+        'message' => $failureMessage,
         'error' => $e->getMessage()
       ]));
       return $response->withStatus(500);

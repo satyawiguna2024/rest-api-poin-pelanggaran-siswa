@@ -9,14 +9,14 @@ return function (App $app) {
     // Login - accessible untuk semua (admin, guru, siswa)
     $app->post('/api/auth/login', [AuthController::class, 'login']);
 
-    $app->post('/api/auth/register-admin', [AuthController::class, 'registerAdmin']);
+    // $app->post('/api/auth/register-admin', [AuthController::class, 'registerAdmin']);
     
-    // Admin only - endpoint generik lama, tetap aktif untuk backward compatibility
-    // $app->post('/api/admin/create-user', [AuthController::class, 'createUser'])
-    //     ->add(new RoleMiddleware(['admin']))
-    //     ->add(new JwtMiddleware());
 
     // Admin only - endpoint baru per role
+    $app->post('/api/admin/create-admin', [AuthController::class, 'createAdmin'])
+        ->add(new RoleMiddleware(['admin']))
+        ->add(new JwtMiddleware());
+
     $app->post('/api/admin/create-guru', [AuthController::class, 'createGuru'])
         ->add(new RoleMiddleware(['admin']))
         ->add(new JwtMiddleware());

@@ -52,6 +52,15 @@ class UsersRepositories
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  public function findAdminByNuptk(string $nuptk)
+  {
+    $stmt = $this->db->prepare(
+      "SELECT nuptk FROM admin WHERE nuptk = :nuptk LIMIT 1"
+    );
+    $stmt->execute(['nuptk' => $nuptk]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
   public function create(array $data)
   {
     $stmt = $this->db->prepare("
@@ -74,6 +83,18 @@ class UsersRepositories
     try {
       $this->create($data);
       $userId = (int) $this->db->lastInsertId();
+
+      if ($data['role'] === 'admin') {
+        $this->createAdminProfile($userId, $data);
+
+        $this->db->commit();
+
+        return [
+          'user_id' => $userId,
+          'profile_key' => 'nuptk',
+          'profile_value' => $data['nuptk']
+        ];
+      }
 
       if ($data['role'] === 'guru') {
         $this->createGuruProfile($userId, $data);
@@ -103,6 +124,45 @@ class UsersRepositories
 
       throw $th;
     }
+  }
+
+  private function createAdminProfile(int $userId, array $data): void
+  {
+    $stmt = $this->db->prepare("
+      INSERT INTO admin (
+        nuptk,
+        id_users,
+        nama,
+        alamat,
+        tanggal_lahir,
+        jenis_kelamin,
+        agama,
+        telepon,
+        jabatan
+      ) VALUES (
+        :nuptk,
+        :id_users,
+        :nama,
+        :alamat,
+        :tanggal_lahir,
+        :jenis_kelamin,
+        :agama,
+        :telepon,
+        :jabatan
+      )
+    ");
+
+    $stmt->execute([
+      'nuptk' => $data['nuptk'],
+      'id_users' => $userId,
+      'nama' => $data['nama'],
+      'alamat' => $data['alamat'] ?? null,
+      'tanggal_lahir' => $data['tanggal_lahir'],
+      'jenis_kelamin' => $data['jenis_kelamin'],
+      'agama' => $data['agama'],
+      'telepon' => $data['telepon'] ?? null,
+      'jabatan' => $data['jabatan'] ?? 'admin sekolah'
+    ]);
   }
 
   private function createGuruProfile(int $userId, array $data): void
