@@ -46,6 +46,7 @@ class AuthController
       'exp' => time() + (60 * 60) // 1 jam
     ];
 
+    // jwt secret
     $token = JWT::encode($payload, $this->jwtSecret, 'HS256');
 
     $response->getBody()->write(json_encode([
@@ -55,7 +56,6 @@ class AuthController
         'id' => $user['id'],
         'username' => $user['username'],
         'email' => $user['email'],
-        'password' => $user['password'],
         'role' => $user['role']
       ]
     ]));
@@ -68,13 +68,7 @@ class AuthController
     $data = (array) $request->getParsedBody();
     $data['role'] = 'admin';
 
-    return $this->createAccountWithProfile(
-      $data,
-      $response,
-      'Admin berhasil dibuat! Silakan login',
-      null,
-      'Gagal membuat admin'
-    );
+    return $this->createAccountWithProfile( $data, $response, 'Admin berhasil dibuat! Silakan login', null, 'Gagal membuat admin' );
   }
 
   // function create user khusus admin
@@ -98,11 +92,7 @@ class AuthController
     return $this->createUserByRole($request, $response, 'siswa');
   }
 
-  private function createUserByRole(
-    Request $request,
-    Response $response,
-    ?string $forcedRole = null
-  )
+  private function createUserByRole( Request $request, Response $response, ?string $forcedRole = null )
   {
     // Ambil user yang sedang login dari JWT token
     $adminUser = $request->getAttribute('user');
@@ -149,13 +139,7 @@ class AuthController
     );
   }
 
-  private function createAccountWithProfile(
-    array $data,
-    Response $response,
-    string $successMessage,
-    ?string $createdBy = null,
-    string $failureMessage = 'Gagal membuat user'
-  )
+  private function createAccountWithProfile( array $data, Response $response, string $successMessage, ?string $createdBy = null, string $failureMessage = 'Gagal membuat user')
   {
     if (empty($data['role']) || !in_array($data['role'], ['admin', 'guru', 'siswa'], true)) {
       $response->getBody()->write(json_encode([

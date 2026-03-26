@@ -6,24 +6,15 @@ use App\Middleware\RoleMiddleware;
 use Slim\App;
 
 return function (App $app) {
-    // Login - accessible untuk semua (admin, guru, siswa)
+    // Login -> untuk semua (admin, guru, siswa)
     $app->post('/api/auth/login', [AuthController::class, 'login']);
 
-    // $app->post('/api/auth/register-admin', [AuthController::class, 'registerAdmin']);
-    
-
-    // Admin only - endpoint baru per role
-    $app->post('/api/admin/create-admin', [AuthController::class, 'createAdmin'])
-        ->add(new RoleMiddleware(['admin']))
-        ->add(new JwtMiddleware());
-
-    $app->post('/api/admin/create-guru', [AuthController::class, 'createGuru'])
-        ->add(new RoleMiddleware(['admin']))
-        ->add(new JwtMiddleware());
-
-    $app->post('/api/admin/create-siswa', [AuthController::class, 'createSiswa'])
-        ->add(new RoleMiddleware(['admin']))
-        ->add(new JwtMiddleware());
+    // Admin -> membuat users/akun (admin, guru, siswa) -> dibarengi dengan input personal data
+    $app->group('/api/admin', function($group) {
+        $group->post('/create-admin', [AuthController::class, 'createAdmin']);
+        $group->post('/create-guru', [AuthController::class, 'createGuru']);
+        $group->post('/create-siswa', [AuthController::class, 'createSiswa']);
+    })->add(new RoleMiddleware(['admin']))->add(new JwtMiddleware());
 
     // Protected route - untuk test JWT validation
     $app->get('/api/auth/response', function ($req, $res) {

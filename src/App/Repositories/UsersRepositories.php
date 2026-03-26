@@ -17,46 +17,35 @@ class UsersRepositories
 
   public function findByUsername(string $username)
   {
-    $stmt = $this->db->prepare(
-        "SELECT * FROM users 
-      WHERE username = :username AND status = 'Y'"
-      );
+    $stmt = $this->db->prepare( "SELECT * FROM users WHERE username = :username AND status = 'Y'" );
     $stmt->execute(['username' => $username]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
   public function findByEmail(string $email)
   {
-    $stmt = $this->db->prepare(
-      "SELECT * FROM users WHERE email = :email LIMIT 1"
-    );
+    $stmt = $this->db->prepare( "SELECT * FROM users WHERE email = :email LIMIT 1" );
     $stmt->execute(['email' => $email]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
   public function findGuruByNuptk(string $nuptk)
   {
-    $stmt = $this->db->prepare(
-      "SELECT nuptk FROM guru WHERE nuptk = :nuptk LIMIT 1"
-    );
+    $stmt = $this->db->prepare( "SELECT nuptk FROM guru WHERE nuptk = :nuptk LIMIT 1" );
     $stmt->execute(['nuptk' => $nuptk]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
   public function findSiswaByNis(string $nis)
   {
-    $stmt = $this->db->prepare(
-      "SELECT nis FROM siswa WHERE nis = :nis LIMIT 1"
-    );
+    $stmt = $this->db->prepare( "SELECT nis FROM siswa WHERE nis = :nis LIMIT 1" );
     $stmt->execute(['nis' => $nis]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
   public function findAdminByNuptk(string $nuptk)
   {
-    $stmt = $this->db->prepare(
-      "SELECT nuptk FROM admin WHERE nuptk = :nuptk LIMIT 1"
-    );
+    $stmt = $this->db->prepare( "SELECT nuptk FROM admin WHERE nuptk = :nuptk LIMIT 1" );
     $stmt->execute(['nuptk' => $nuptk]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
@@ -129,27 +118,8 @@ class UsersRepositories
   private function createAdminProfile(int $userId, array $data): void
   {
     $stmt = $this->db->prepare("
-      INSERT INTO admin (
-        nuptk,
-        id_users,
-        nama,
-        alamat,
-        tanggal_lahir,
-        jenis_kelamin,
-        agama,
-        telepon,
-        jabatan
-      ) VALUES (
-        :nuptk,
-        :id_users,
-        :nama,
-        :alamat,
-        :tanggal_lahir,
-        :jenis_kelamin,
-        :agama,
-        :telepon,
-        :jabatan
-      )
+      INSERT INTO admin ( nuptk, id_users, nama, alamat, tanggal_lahir, jenis_kelamin, agama, telepon, jabatan ) 
+      VALUES ( :nuptk, :id_users, :nama, :alamat, :tanggal_lahir, :jenis_kelamin, :agama, :telepon, :jabatan )
     ");
 
     $stmt->execute([
@@ -168,27 +138,8 @@ class UsersRepositories
   private function createGuruProfile(int $userId, array $data): void
   {
     $stmt = $this->db->prepare("
-      INSERT INTO guru (
-        nuptk,
-        id_users,
-        nama,
-        alamat,
-        tanggal_lahir,
-        jenis_kelamin,
-        agama,
-        telepon,
-        jabatan
-      ) VALUES (
-        :nuptk,
-        :id_users,
-        :nama,
-        :alamat,
-        :tanggal_lahir,
-        :jenis_kelamin,
-        :agama,
-        :telepon,
-        :jabatan
-      )
+      INSERT INTO guru ( nuptk, id_users, nama, alamat, tanggal_lahir, jenis_kelamin, agama, telepon, jabatan )
+      VALUES ( :nuptk, :id_users, :nama, :alamat, :tanggal_lahir, :jenis_kelamin, :agama, :telepon, :jabatan )
     ");
 
     $stmt->execute([
@@ -207,29 +158,8 @@ class UsersRepositories
   private function createSiswaProfile(int $userId, array $data): void
   {
     $stmt = $this->db->prepare("
-      INSERT INTO siswa (
-        nis,
-        id_users,
-        id_ortu_wali_siswa,
-        id_kelas,
-        nama,
-        alamat,
-        tanggal_lahir,
-        jenis_kelamin,
-        agama,
-        telepon
-      ) VALUES (
-        :nis,
-        :id_users,
-        :id_ortu_wali_siswa,
-        :id_kelas,
-        :nama,
-        :alamat,
-        :tanggal_lahir,
-        :jenis_kelamin,
-        :agama,
-        :telepon
-      )
+      INSERT INTO siswa ( nis, id_users, id_ortu_wali_siswa, id_kelas, nama, alamat, tanggal_lahir, jenis_kelamin, agama, telepon )
+      VALUES ( :nis, :id_users, :id_ortu_wali_siswa, :id_kelas, :nama, :alamat, :tanggal_lahir, :jenis_kelamin, :agama, :telepon )
     ");
 
     $stmt->execute([
