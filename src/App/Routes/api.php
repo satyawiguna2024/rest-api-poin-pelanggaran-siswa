@@ -2,6 +2,7 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\Role\AdminController;
+use App\Controllers\Role\GuruController;
 use App\Middleware\JwtMiddleware;
 use App\Middleware\RoleMiddleware;
 use Slim\App;
@@ -25,6 +26,14 @@ return function (App $app) {
             $admin->get('/{id}', [AdminController::class, 'show']);
             $admin->put('/{id}', [AdminController::class, 'update']);
             $admin->delete('/{id}', [AdminController::class, 'destroy']);
+        });
+
+        // crud group guru
+        $group->group('/guru', function ($guru) {
+            $guru->get('', [GuruController::class, 'index']);
+            $guru->get('/{id}', [GuruController::class, 'show']);
+            $guru->put('/{id}', [GuruController::class, 'update']);
+            $guru->delete('/{id}', [GuruController::class, 'destroy']);
         });
 
     })->add(new RoleMiddleware(['admin']))->add(new JwtMiddleware());

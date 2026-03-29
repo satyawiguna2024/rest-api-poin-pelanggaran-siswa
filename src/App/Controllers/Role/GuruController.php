@@ -6,25 +6,26 @@ namespace App\Controllers\Role;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\Repositories\Role\AdminRepositories;
+use App\Repositories\Role\GuruRepositories;
 
-class AdminController
+class GuruController
 {
-  private AdminRepositories $adminRepo;
+  private GuruRepositories $guruRepo;
 
-  public function __construct(AdminRepositories $adminRepo)
+  public function __construct(GuruRepositories $guruRepo)
   {
-    $this->adminRepo = $adminRepo;
+    $this->guruRepo = $guruRepo;
   }
 
+  // mengambil semua data guru
   public function index(Request $request, Response $response)
   {
-    $admins = $this->adminRepo->findAll();
+    $gurus = $this->guruRepo->findAll();
 
     $response->getBody()->write(json_encode([
-      'message' => 'Berhasil mendapatkan semua data Admin',
+      'message' => 'Berhasil mendapatkan semua data Guru',
       'status' => 'success',
-      'data' => $admins
+      'data' => $gurus
     ]));
 
     return $response->withStatus(200);
@@ -32,38 +33,38 @@ class AdminController
 
   public function show(Request $request, Response $response, $args)
   {
-    // $args berisi parameter dari URL, misal /admins/5 → $args['id'] = '5'
+    // $args berisi parameter dari URL, misal /guru/5 → $args['id'] = '5'
     $id = $args['id'];
 
-    $admin = $this->adminRepo->findById($id);
+    $guru = $this->guruRepo->findById($id);
 
-    if (!$admin) {
+    if (!$guru) {
       $response->getBody()->write(json_encode([
-        'message' => 'Admin tidak ditemukan',
+        'message' => 'Guru tidak ditemukan',
         'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }
 
     $response->getBody()->write(json_encode([
-      'message' => 'Berhasil mendapatkan data admin',
+      'message' => 'Berhasil mendapatkan data guru',
       'status' => 'success',
-      'data' => $admin
+      'data' => $guru
     ]));
 
     return $response->withStatus(200);
   }
 
-  // update admin data
+  // update guru data
   public function update(Request $request, Response $response, $args)
   {
     $id = $args['id'];
     $data = $request->getParsedBody();
-    $existing = $this->adminRepo->findById($id);
+    $existing = $this->guruRepo->findById($id);
 
     if (!$existing) {
       $response->getBody()->write(json_encode([
-        'message' => 'Admin tidak ditemukan',
+        'message' => 'Guru tidak ditemukan',
         'status' => 'failed'
       ]));
       return $response->withStatus(404);
@@ -115,14 +116,14 @@ class AdminController
       'jenis_kelamin' => $data['jenis_kelamin'],
       'agama'         => trim($data['agama']),
       'telepon'       => isset($data['telepon']) && trim($data['telepon']) !== '' ? trim($data['telepon']) : null,
-      'jabatan'       => isset($data['jabatan']) && trim($data['jabatan']) !== '' ? trim($data['jabatan']) : 'admin sekolah',
+      'jabatan'       => isset($data['jabatan']) && trim($data['jabatan']) !== '' ? trim($data['jabatan']) : 'guru mapel',
     ];
 
     try {
-      $this->adminRepo->update($id, $payload);
+      $this->guruRepo->update($id, $payload);
 
       $response->getBody()->write(json_encode([
-        'message' => 'Data admin berhasil diupdate',
+        'message' => 'Data guru berhasil diupdate',
         'status' => 'success',
         'data'    => array_merge(['id' => $id], $payload)
       ]));
@@ -130,7 +131,7 @@ class AdminController
       return $response->withStatus(200);
     } catch (\Exception $e) {
       $response->getBody()->write(json_encode([
-        'message' => 'Gagal mengupdate admin',
+        'message' => 'Gagal mengupdate guru',
         'status' => 'error',
         'error'   => $e->getMessage()
       ]));
@@ -138,15 +139,15 @@ class AdminController
     }
   }
 
-  // delete data users role admin
+  // delete data users role guru
   public function destroy(Request $request, Response $response, $args)
   {
     $id = $args['id'];
 
-    // mengambil info admin yang sedang login dari JWT
+    // mengambil info guru yang sedang login dari JWT
     $loggedInUser = $request->getAttribute('user');
 
-    // mencegah admin menghapus akunnya sendiri
+    // mencegah guru menghapus akunnya sendiri
     if ($loggedInUser->id === $id) {
       $response->getBody()->write(json_encode([
         'message' => 'Tidak dapat menghapus akun sendiri',
@@ -155,28 +156,28 @@ class AdminController
       return $response->withStatus(403);
     }
 
-    // Cek admin target ada atau tidak
-    $existing = $this->adminRepo->findById($id);
+    // Cek guru target ada atau tidak
+    $existing = $this->guruRepo->findById($id);
     if (!$existing) {
       $response->getBody()->write(json_encode([
-        'message' => 'Admin tidak ditemukan',
+        'message' => 'Guru tidak ditemukan',
         'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }
 
     try {
-      $this->adminRepo->delete($id);
+      $this->guruRepo->delete($id);
 
       $response->getBody()->write(json_encode([
-        'message' => 'Admin berhasil dihapus',
+        'message' => 'Guru berhasil dihapus',
         'status' => 'success'
       ]));
 
       return $response->withStatus(200);
     } catch (\Exception $e) {
       $response->getBody()->write(json_encode([
-        'message' => 'Gagal menghapus admin',
+        'message' => 'Gagal menghapus guru',
         'status' => 'error',
         'error'   => $e->getMessage()
       ]));
