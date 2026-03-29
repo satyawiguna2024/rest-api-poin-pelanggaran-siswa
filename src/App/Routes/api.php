@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\AuthController;
+use App\Controllers\Role\AdminController;
 use App\Middleware\JwtMiddleware;
 use App\Middleware\RoleMiddleware;
 use Slim\App;
@@ -10,16 +11,28 @@ return function (App $app) {
     $app->post('/api/auth/login', [AuthController::class, 'login']);
 
     // Admin -> membuat users/akun (admin, guru, siswa) -> dibarengi dengan input personal data
-    $app->group('/api/admin', function($group) {
-        $group->post('/create-admin', [AuthController::class, 'createAdmin']);
-        $group->post('/create-guru', [AuthController::class, 'createGuru']);
-        $group->post('/create-siswa', [AuthController::class, 'createSiswa']);
+    $app->group('/api', function ($group) {
+        // group create users - only admin
+        $group->group('/auth', function ($auth) {
+            $auth->post('/register-admin', [AuthController::class, 'createAdmin']);
+            $auth->post('/register-guru', [AuthController::class, 'createGuru']);
+            $auth->post('/register-siswa', [AuthController::class, 'createSiswa']);
+        });
+
+        // crud group admin
+        $group->group('/admin', function ($admin) {
+            $admin->get('', [AdminController::class, 'index']);
+            $admin->get('/{id}', [AdminController::class, 'show']);
+            $admin->put('/{id}', [AdminController::class, 'update']);
+            $admin->delete('/{id}', [AdminController::class, 'destroy']);
+        });
+
     })->add(new RoleMiddleware(['admin']))->add(new JwtMiddleware());
 
     // Protected route - untuk test JWT validation
     $app->get('/api/auth/response', function ($req, $res) {
         $user = $req->getAttribute('user');
-        
+
         $res->getBody()->write(json_encode([
             'message' => 'Akses berhasil',
             'id' => $user->id,
