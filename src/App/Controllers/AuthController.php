@@ -266,9 +266,22 @@ class AuthController
       $payload['id_kelas'] = isset($data['id_kelas']) && $data['id_kelas'] !== ''
         ? (int) $data['id_kelas']
         : null;
-      $payload['id_ortu_wali_siswa'] = isset($data['id_ortu_wali_siswa']) && $data['id_ortu_wali_siswa'] !== ''
-        ? (int) $data['id_ortu_wali_siswa']
-        : null;
+      
+      // field ortu ke payload
+      $ortuFields = [
+          'nama_ayah', 'nama_ibu', 'nama_wali',
+          'pekerjaan_ayah', 'pekerjaan_ibu', 'pekerjaan_wali',
+          'telepon_ayah', 'telepon_ibu', 'telepon_wali',
+          'alamat_ayah', 'alamat_ibu', 'alamat_wali'
+      ];
+
+      foreach ($ortuFields as $field) {
+          // Kalau field tidak dikirim → set null
+          // Kalau dikirim → ambil nilainya
+          $payload[$field] = isset($data[$field]) && trim((string)$data[$field]) !== ''
+              ? trim((string)$data[$field])
+              : null;
+      }
     }
 
     try {

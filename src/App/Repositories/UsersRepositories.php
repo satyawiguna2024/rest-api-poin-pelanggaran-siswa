@@ -70,12 +70,62 @@ class UsersRepositories
     $this->db->beginTransaction();
 
     try {
+      // pembuatan gabungan satu insert dengan siswa dan data ortu_wali_siswa
+      $idOrtu = null;
+
+      // aksi penambahan data users role siswa + include tambah data ortu_wali_siswa
+      if ($data['role'] === 'siswa') {
+        // Kumpulkan semua field ortu dari request
+        $ortuFields = [
+          'nama_ayah', 'nama_ibu', 'nama_wali',
+          'pekerjaan_ayah', 'pekerjaan_ibu', 'pekerjaan_wali',
+          'telepon_ayah', 'telepon_ibu', 'telepon_wali',
+          'alamat_ayah', 'alamat_ibu', 'alamat_wali'
+        ];
+
+        // mencari minimal ada 1 field ortu yang diisi
+        $adaDataOrtu = false;
+        foreach ($ortuFields as $field) {
+          if (!empty(trim((string)($data[$field] ?? '')))) {
+            $adaDataOrtu = true;
+            break;
+          }
+        }
+
+        if ($adaDataOrtu) {
+          // query add ortu_wali_siswa
+          $stmtOrtu = $this->db->prepare("
+            INSERT INTO ortu_wali_siswa ( nama_ayah, nama_ibu, nama_wali, pekerjaan_ayah, pekerjaan_ibu, pekerjaan_wali, telepon_ayah, telepon_ibu, telepon_wali, alamat_ayah, alamat_ibu, alamat_wali )
+            VALUES ( :nama_ayah, :nama_ibu, :nama_wali, :pekerjaan_ayah, :pekerjaan_ibu, :pekerjaan_wali, :telepon_ayah, :telepon_ibu, :telepon_wali, :alamat_ayah, :alamat_ibu, :alamat_wali )
+          ");
+  
+          $stmtOrtu->execute([
+            'nama_ayah'      => $this->normalizeNullable($data['nama_ayah'] ?? null),
+            'nama_ibu'       => $this->normalizeNullable($data['nama_ibu'] ?? null),
+            'nama_wali'      => $this->normalizeNullable($data['nama_wali'] ?? null),
+            'pekerjaan_ayah' => $this->normalizeNullable($data['pekerjaan_ayah'] ?? null),
+            'pekerjaan_ibu'  => $this->normalizeNullable($data['pekerjaan_ibu'] ?? null),
+            'pekerjaan_wali' => $this->normalizeNullable($data['pekerjaan_wali'] ?? null),
+            'telepon_ayah'   => $this->normalizeNullable($data['telepon_ayah'] ?? null),
+            'telepon_ibu'    => $this->normalizeNullable($data['telepon_ibu'] ?? null),
+            'telepon_wali'   => $this->normalizeNullable($data['telepon_wali'] ?? null),
+            'alamat_ayah'    => $this->normalizeNullable($data['alamat_ayah'] ?? null),
+            'alamat_ibu'     => $this->normalizeNullable($data['alamat_ibu'] ?? null),
+            'alamat_wali'    => $this->normalizeNullable($data['alamat_wali'] ?? null),
+          ]);
+  
+          $idOrtu = (int) $this->db->lastInsertId();
+        }
+
+        // inject id ortu ke data siswa
+        $data['id_ortu_wali_siswa'] = $idOrtu;
+      }
+
       $this->create($data);
       $userId = (int) $this->db->lastInsertId();
 
       if ($data['role'] === 'admin') {
         $this->createAdminProfile($userId, $data);
-
         $this->db->commit();
 
         return [
@@ -87,7 +137,6 @@ class UsersRepositories
 
       if ($data['role'] === 'guru') {
         $this->createGuruProfile($userId, $data);
-
         $this->db->commit();
 
         return [
@@ -98,13 +147,13 @@ class UsersRepositories
       }
 
       $this->createSiswaProfile($userId, $data);
-
       $this->db->commit();
 
       return [
         'user_id' => $userId,
         'profile_key' => 'nis',
-        'profile_value' => $data['nis']
+        'profile_value' => $data['nis'],
+        'id_ortu' => $idOrtu // tambah idOrtu
       ];
     } catch (\Throwable $th) {
       if ($this->db->inTransaction()) {
@@ -174,5 +223,12 @@ class UsersRepositories
       'agama' => $data['agama'],
       'telepon' => $data['telepon'] ?? null
     ]);
+  }
+
+  private function normalizeNullable($value): ?string
+  {
+    if ($value === null) return null;
+    $trimmed = trim((string) $value);
+    return $trimmed === '' ? null : $trimmed;
   }
 }

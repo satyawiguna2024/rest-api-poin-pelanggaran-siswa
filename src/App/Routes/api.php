@@ -3,6 +3,7 @@
 use App\Controllers\AuthController;
 use App\Controllers\Role\AdminController;
 use App\Controllers\Role\GuruController;
+use App\Controllers\Role\SiswaController;
 use App\Middleware\JwtMiddleware;
 use App\Middleware\RoleMiddleware;
 use Slim\App;
@@ -36,6 +37,13 @@ return function (App $app) {
             $guru->delete('/{id}', [GuruController::class, 'destroy']);
         });
 
+        // crud group siswa
+        $group->group('/siswa', function ($siswa) {
+            $siswa->get('', [SiswaController::class, 'index']);
+            $siswa->get('/{id}', [SiswaController::class, 'show']);
+            $siswa->put('/{id}', [SiswaController::class, 'update']);
+            $siswa->delete('/{id}', [SiswaController::class, 'destroy']);
+        });
     })->add(new RoleMiddleware(['admin']))->add(new JwtMiddleware());
 
     // Protected route - untuk test JWT validation
