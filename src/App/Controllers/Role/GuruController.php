@@ -41,7 +41,6 @@ class GuruController
     if (!$guru) {
       $response->getBody()->write(json_encode([
         'message' => 'Guru tidak ditemukan',
-        'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }
@@ -65,7 +64,6 @@ class GuruController
     if (!$existing) {
       $response->getBody()->write(json_encode([
         'message' => 'Guru tidak ditemukan',
-        'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }
@@ -151,7 +149,6 @@ class GuruController
     if ($loggedInUser->id === $id) {
       $response->getBody()->write(json_encode([
         'message' => 'Tidak dapat menghapus akun sendiri',
-        'status' => 'failed'
       ]));
       return $response->withStatus(403);
     }
@@ -161,7 +158,6 @@ class GuruController
     if (!$existing) {
       $response->getBody()->write(json_encode([
         'message' => 'Guru tidak ditemukan',
-        'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }

@@ -118,7 +118,6 @@ class KelasController
       'id' => $kelas['nama_kelas'],
       'created_at' => $kelas['created_at'],
       'updated_at' => $kelas['updated_at'],
-
       'guru' => [
         'nuptk' => $kelas['nuptk'],
         'nama' => $kelas['nama'],
@@ -157,7 +156,6 @@ class KelasController
       return $response->withStatus(400);
     }
 
-    // 4. Cari guru berdasarkan nuptk kalau dikirim
     $idGuru = null;
     if (!empty(trim($data['guru'] ?? ''))) {
       $guru = $this->guruRepo->findGuruByNuptk(trim($data['guru']));
@@ -178,6 +176,7 @@ class KelasController
 
       $response->getBody()->write(json_encode([
         'message' => 'Kelas berhasil diupdate',
+        'status' => 'success',
         'data' => [
           'id' => $id,
           'nama_kelas' => trim($data['nama_kelas']),
@@ -189,6 +188,7 @@ class KelasController
     } catch (\Exception $e) {
       $response->getBody()->write(json_encode([
         'message' => 'Gagal mengupdate kelas',
+        'status' => 'error',
         'error'   => $e->getMessage()
       ]));
       return $response->withStatus(500);

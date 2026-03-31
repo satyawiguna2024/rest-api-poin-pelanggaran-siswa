@@ -40,7 +40,6 @@ class AdminController
     if (!$admin) {
       $response->getBody()->write(json_encode([
         'message' => 'Admin tidak ditemukan',
-        'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }
@@ -63,8 +62,7 @@ class AdminController
 
     if (!$existing) {
       $response->getBody()->write(json_encode([
-        'message' => 'Admin tidak ditemukan',
-        'status' => 'failed'
+        'message' => 'Admin tidak ditemukan'
       ]));
       return $response->withStatus(404);
     }
@@ -82,7 +80,6 @@ class AdminController
     if ($missing !== []) {
       $response->getBody()->write(json_encode([
         'message' => 'Field wajib belum diisi',
-        'status' => 'failed',
         'fields'  => $missing
       ]));
       return $response->withStatus(400);
@@ -93,7 +90,6 @@ class AdminController
     if (!$parsedDate || $parsedDate->format('Y-m-d') !== $data['tanggal_lahir']) {
       $response->getBody()->write(json_encode([
         'message' => 'Format tanggal_lahir harus Y-m-d',
-        'status' => 'failed'
       ]));
       return $response->withStatus(400);
     }
@@ -102,7 +98,6 @@ class AdminController
     if (!in_array($data['jenis_kelamin'], ['L', 'P'], true)) {
       $response->getBody()->write(json_encode([
         'message' => 'Jenis kelamin hanya boleh "L" atau "P"',
-        'status' => "failed"
       ]));
       return $response->withStatus(400);
     }
@@ -150,7 +145,6 @@ class AdminController
     if ($loggedInUser->id === $id) {
       $response->getBody()->write(json_encode([
         'message' => 'Tidak dapat menghapus akun sendiri',
-        'status' => 'failed'
       ]));
       return $response->withStatus(403);
     }
@@ -160,7 +154,6 @@ class AdminController
     if (!$existing) {
       $response->getBody()->write(json_encode([
         'message' => 'Admin tidak ditemukan',
-        'status' => 'failed'
       ]));
       return $response->withStatus(404);
     }
