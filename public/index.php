@@ -6,6 +6,7 @@ use DI\Container;
 use Slim\Factory\AppFactory;
 
 use App\Config\Database;
+use App\Middleware\CorsMiddleware;
 use App\Repositories\UsersRepositories;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -22,6 +23,10 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
+
+// add cors middleware
+$app->add(new CorsMiddleware());
+
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 (require __DIR__ . '/../src/App/Routes/api.php')($app);

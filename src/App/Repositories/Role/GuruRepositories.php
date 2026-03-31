@@ -49,6 +49,14 @@ class GuruRepositories
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  // find by nuptk
+  public function findGuruByNuptk(string $nuptk)
+  {
+    $stmt = $this->db->prepare("SELECT nuptk, nama, jabatan, telepon FROM guru WHERE nuptk = :nuptk  LIMIT 1");
+    $stmt->execute(['nuptk' => $nuptk]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
   // update data guru
   public function update($id, $data)
   {

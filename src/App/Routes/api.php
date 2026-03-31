@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\AuthController;
+use App\Controllers\KelasController;
 use App\Controllers\Role\AdminController;
 use App\Controllers\Role\GuruController;
 use App\Controllers\Role\SiswaController;
@@ -14,14 +15,14 @@ return function (App $app) {
 
     // Admin -> membuat users/akun (admin, guru, siswa) -> dibarengi dengan input personal data
     $app->group('/api', function ($group) {
-        // group create users - only admin
+        //? group create users - only admin
         $group->group('/auth', function ($auth) {
             $auth->post('/register-admin', [AuthController::class, 'createAdmin']);
             $auth->post('/register-guru', [AuthController::class, 'createGuru']);
             $auth->post('/register-siswa', [AuthController::class, 'createSiswa']);
         });
 
-        // crud group admin
+        //? crud group admin
         $group->group('/admin', function ($admin) {
             $admin->get('', [AdminController::class, 'index']);
             $admin->get('/{id}', [AdminController::class, 'show']);
@@ -29,7 +30,7 @@ return function (App $app) {
             $admin->delete('/{id}', [AdminController::class, 'destroy']);
         });
 
-        // crud group guru
+        //? crud group guru
         $group->group('/guru', function ($guru) {
             $guru->get('', [GuruController::class, 'index']);
             $guru->get('/{id}', [GuruController::class, 'show']);
@@ -37,7 +38,7 @@ return function (App $app) {
             $guru->delete('/{id}', [GuruController::class, 'destroy']);
         });
 
-        // crud group siswa
+        //? crud group siswa
         $group->group('/siswa', function ($siswa) {
             $siswa->get('', [SiswaController::class, 'index']);
             $siswa->get('/{id}', [SiswaController::class, 'show']);
@@ -45,6 +46,14 @@ return function (App $app) {
             $siswa->delete('/{id}', [SiswaController::class, 'destroy']);
         });
     })->add(new RoleMiddleware(['admin']))->add(new JwtMiddleware());
+
+    //? (create, read, read by id, update) kelas
+    $app->group('/api/kelas', function ($group) {
+        $group->post('', [KelasController::class, 'store']);
+        $group->get('', [KelasController::class, 'index']);
+        $group->get('/{id}', [KelasController::class, 'show']);
+        $group->put('/{id}', [KelasController::class, 'update']);
+    });
 
     // Protected route - untuk test JWT validation
     $app->get('/api/auth/response', function ($req, $res) {
