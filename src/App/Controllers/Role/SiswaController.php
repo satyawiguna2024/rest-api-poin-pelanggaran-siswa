@@ -23,12 +23,45 @@ class SiswaController
   // get all siswa
   public function index(Request $request, Response $response)
   {
-    $siswa = $this->siswaRepo->findAll();
+    $siswaData = $this->siswaRepo->findAll();
+
+    $data = array_map(function ($siswa) {
+      return [
+        'id' => $siswa['id'],
+        'nis' => $siswa['nis'],
+        'nama' => $siswa['nama'],
+        'alamat' => $siswa['alamat'],
+        'tanggal_lahir' => $siswa['tanggal_lahir'],
+        'jenis_kelamin' => $siswa['jenis_kelamin'],
+        'agama' => $siswa['agama'],
+        'telepon' => $siswa['telepon'],
+        'user_account' => [
+          'username' => $siswa['username'],
+          'email' => $siswa['email'],
+          'role' => $siswa['role'],
+          'status' => $siswa['status']
+        ],
+        'kelas' => [
+          'nama_kelas' => $siswa['nama_kelas'],
+          'guru' => $siswa['guru']
+        ],
+        'data_ortu' => [
+          'nama_ayah' => $siswa['nama_ayah'],
+          'nama_ibu' => $siswa['nama_ibu'],
+          'pekerjaan_ayah' => $siswa['pekerjaan_ayah'],
+          'pekerjaan_ibu' => $siswa['pekerjaan_ibu'],
+          'telepon_ayah' => $siswa['telepon_ayah'],
+          'telepon_ibu' => $siswa['telepon_ibu'],
+          'alamat_ayah' => $siswa['alamat_ayah'],
+          'alamat_ibu' => $siswa['alamat_ibu']
+        ],
+      ];
+    }, $siswaData);
 
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan semua siswa',
       'status' => 'success',
-      'data'    => $siswa
+      'data'    => $data
     ]));
 
     return $response->withStatus(200);
@@ -47,10 +80,41 @@ class SiswaController
       return $response->withStatus(404);
     }
 
+    $data = [
+      'id' => $siswa['id'],
+      'nis' => $siswa['nis'],
+      'nama' => $siswa['nama'],
+      'alamat' => $siswa['alamat'],
+      'tanggal_lahir' => $siswa['tanggal_lahir'],
+      'jenis_kelamin' => $siswa['jenis_kelamin'],
+      'agama' => $siswa['agama'],
+      'telepon' => $siswa['telepon'],
+      'user_account' => [
+        'username' => $siswa['username'],
+        'email' => $siswa['email'],
+        'role' => $siswa['role'],
+        'status' => $siswa['status']
+      ],
+      'kelas' => [
+        'nama_kelas' => $siswa['nama_kelas'],
+        'guru' => $siswa['guru']
+      ],
+      'data_ortu' => [
+        'nama_ayah' => $siswa['nama_ayah'],
+        'nama_ibu' => $siswa['nama_ibu'],
+        'pekerjaan_ayah' => $siswa['pekerjaan_ayah'],
+        'pekerjaan_ibu' => $siswa['pekerjaan_ibu'],
+        'telepon_ayah' => $siswa['telepon_ayah'],
+        'telepon_ibu' => $siswa['telepon_ibu'],
+        'alamat_ayah' => $siswa['alamat_ayah'],
+        'alamat_ibu' => $siswa['alamat_ibu']
+      ],
+    ];
+
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan siswa berdasarkan id',
       'status' => 'success',
-      'data'    => $siswa
+      'data' => $data
     ]));
 
     return $response->withStatus(200);
@@ -71,7 +135,7 @@ class SiswaController
     }
 
     // field wajib siswa
-    $requiredFields = [ 'nama', 'tanggal_lahir', 'jenis_kelamin', 'agama' ];
+    $requiredFields = ['nama', 'tanggal_lahir', 'jenis_kelamin', 'agama'];
 
     $missing = [];
     foreach ($requiredFields as $field) {
@@ -155,32 +219,32 @@ class SiswaController
 
   // delete
   public function destroy(Request $request, Response $response, $args)
-    {
-        $id = $args['id'];
+  {
+    $id = $args['id'];
 
-        // Cek siswa ada atau tidak
-        $existing = $this->siswaRepo->findById($id);
-        if (!$existing) {
-            $response->getBody()->write(json_encode([
-                'message' => 'Siswa tidak ditemukan'
-            ]));
-            return $response->withStatus(404);
-        }
-
-        try {
-            $this->siswaRepo->delete($id);
-
-            $response->getBody()->write(json_encode([
-                'message' => 'Siswa berhasil dihapus'
-            ]));
-
-            return $response->withStatus(200);
-        } catch (\Exception $e) {
-            $response->getBody()->write(json_encode([
-                'message' => 'Gagal menghapus siswa',
-                'error'   => $e->getMessage()
-            ]));
-            return $response->withStatus(500);
-        }
+    // Cek siswa ada atau tidak
+    $existing = $this->siswaRepo->findById($id);
+    if (!$existing) {
+      $response->getBody()->write(json_encode([
+        'message' => 'Siswa tidak ditemukan'
+      ]));
+      return $response->withStatus(404);
     }
+
+    try {
+      $this->siswaRepo->delete($id);
+
+      $response->getBody()->write(json_encode([
+        'message' => 'Siswa berhasil dihapus'
+      ]));
+
+      return $response->withStatus(200);
+    } catch (\Exception $e) {
+      $response->getBody()->write(json_encode([
+        'message' => 'Gagal menghapus siswa',
+        'error'   => $e->getMessage()
+      ]));
+      return $response->withStatus(500);
+    }
+  }
 }
