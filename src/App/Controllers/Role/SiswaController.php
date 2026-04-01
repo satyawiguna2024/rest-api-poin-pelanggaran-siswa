@@ -27,6 +27,7 @@ class SiswaController
 
     $data = array_map(function ($siswa) {
       return [
+        'id' => $siswa['id'],
         'nis' => $siswa['nis'],
         'nama' => $siswa['nama'],
         'alamat' => $siswa['alamat'],
@@ -35,7 +36,6 @@ class SiswaController
         'agama' => $siswa['agama'],
         'telepon' => $siswa['telepon'],
         'user_account' => [
-          'id' => $siswa['id'],
           'username' => $siswa['username'],
           'email' => $siswa['email'],
           'role' => $siswa['role'],
@@ -81,6 +81,7 @@ class SiswaController
     }
 
     $data = [
+      'id' => $siswa['id'],
       'nis' => $siswa['nis'],
       'nama' => $siswa['nama'],
       'alamat' => $siswa['alamat'],
@@ -89,7 +90,6 @@ class SiswaController
       'agama' => $siswa['agama'],
       'telepon' => $siswa['telepon'],
       'user_account' => [
-        'id' => $siswa['id'],
         'username' => $siswa['username'],
         'email' => $siswa['email'],
         'role' => $siswa['role'],
@@ -110,10 +110,11 @@ class SiswaController
         'alamat_ibu' => $siswa['alamat_ibu']
       ],
     ];
+
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan siswa berdasarkan id',
       'status' => 'success',
-      'data'    => $data
+      'data' => $data
     ]));
 
     return $response->withStatus(200);

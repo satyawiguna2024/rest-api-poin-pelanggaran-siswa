@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\AuthController;
+use App\Controllers\JenisPelanggaranController;
 use App\Controllers\KelasController;
 use App\Controllers\Role\AdminController;
 use App\Controllers\Role\GuruController;
@@ -54,6 +55,16 @@ return function (App $app) {
         $group->get('/{id}', [KelasController::class, 'show']);
         $group->put('/{id}', [KelasController::class, 'update']);
     });
+    
+    //? crud jenis pelanggaran
+    $app->group('/api/jenis-pelanggaran', function ($group) {
+        $group->post('', [JenisPelanggaranController::class, 'store']);
+        $group->get('', [JenisPelanggaranController::class, 'index']);
+        $group->get('/{id}', [JenisPelanggaranController::class, 'show']);
+        $group->put('/{id}', [JenisPelanggaranController::class, 'update']);
+        $group->delete('/{id}', [JenisPelanggaranController::class, 'destroy']);
+    });
+
 
     // Protected route - untuk test JWT validation
     $app->get('/api/auth/response', function ($req, $res) {
