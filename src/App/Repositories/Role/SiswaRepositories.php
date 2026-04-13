@@ -21,7 +21,7 @@ class SiswaRepositories
     $stmt = $this->db->prepare("
       SELECT
         u.id, u.username, u.email, u.role, u.status,
-        s.nis, s.id_users, s.id_kelas, s.nama, s.alamat, s.tanggal_lahir, s.jenis_kelamin, s.agama, s.telepon,
+        s.nis, s.id_users, s.id_kelas, s.nama, s.alamat, s.tanggal_lahir, s.jenis_kelamin, s.agama, s.telepon, s.created_at, s.updated_at,
         k.id, k.guru, k.nama_kelas,
         o.id, o.nama_ayah, o.nama_ibu, o.pekerjaan_ayah, o.pekerjaan_ibu, o.telepon_ayah, o.telepon_ibu, o.alamat_ayah, o.alamat_ibu,
         COUNT(*) OVER() as total_data
@@ -42,7 +42,7 @@ class SiswaRepositories
     $stmt = $this->db->prepare("
       SELECT
         u.id, u.username, u.email, u.role, u.status,
-        s.nis, s.id_users, s.id_kelas, s.nama, s.alamat, s.tanggal_lahir, s.jenis_kelamin, s.agama, s.telepon,
+        s.nis, s.id_users, s.id_kelas, s.nama, s.alamat, s.tanggal_lahir, s.jenis_kelamin, s.agama, s.telepon, s.created_at, s.updated_at,
         k.id, k.guru, k.nama_kelas,
         o.id, o.nama_ayah, o.nama_ibu, o.pekerjaan_ayah, o.pekerjaan_ibu, o.telepon_ayah, o.telepon_ibu, o.alamat_ayah, o.alamat_ibu
       FROM users u

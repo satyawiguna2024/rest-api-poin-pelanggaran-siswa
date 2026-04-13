@@ -39,7 +39,9 @@ class GuruController
           'email' => $guru['email'],
           'role' => $guru['role'],
           'status' => $guru['status']
-        ]
+        ],
+        'created_at' => $guru['created_at'],
+        'updated_at' => $guru['updated_at']
       ];
     }, $guruData);
 
@@ -82,7 +84,9 @@ class GuruController
         'email' => $guru['email'],
         'role' => $guru['role'],
         'status' => $guru['status']
-      ]
+      ],
+      'created_at' => $guru['created_at'],
+      'updated_at' => $guru['updated_at']
     ];
 
     $response->getBody()->write(json_encode([

@@ -55,6 +55,8 @@ class SiswaController
           'alamat_ayah' => $siswa['alamat_ayah'],
           'alamat_ibu' => $siswa['alamat_ibu']
         ],
+        'created_at' => $siswa['created_at'],
+        'updated_at' => $siswa['updated_at']
       ];
     }, $siswaData);
 
@@ -112,6 +114,8 @@ class SiswaController
         'alamat_ayah' => $siswa['alamat_ayah'],
         'alamat_ibu' => $siswa['alamat_ibu']
       ],
+      'created_at' => $siswa['created_at'],
+      'updated_at' => $siswa['updated_at']
     ];
 
     $response->getBody()->write(json_encode([
