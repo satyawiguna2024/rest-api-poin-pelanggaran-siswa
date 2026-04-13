@@ -35,7 +35,7 @@ class JenisPelanggaranRepositories
   public function findAll()
   {
     $stmt = $this->db->prepare("
-      SELECT id, nama_pelanggaran, poin
+      SELECT id, nama_pelanggaran, poin, created_at, updated_at
       FROM jenis_pelanggaran
       ORDER BY id ASC
     ");
@@ -48,7 +48,7 @@ class JenisPelanggaranRepositories
   public function findById($id)
   {
     $stmt = $this->db->prepare("
-      SELECT id, nama_pelanggaran, poin
+      SELECT id, nama_pelanggaran, poin, created_at, updated_at
       FROM jenis_pelanggaran
       WHERE id = :id
       LIMIT 1

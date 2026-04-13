@@ -7,17 +7,14 @@ namespace App\Controllers\Role;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Repositories\Role\SiswaRepositories;
-use App\Repositories\UsersRepositories;
 
 class SiswaController
 {
   private SiswaRepositories $siswaRepo;
-  private UsersRepositories $usersRepo;
 
-  public function __construct(SiswaRepositories $siswaRepo, UsersRepositories $usersRepo)
+  public function __construct(SiswaRepositories $siswaRepo)
   {
     $this->siswaRepo = $siswaRepo;
-    $this->usersRepo = $usersRepo;
   }
 
   // get all siswa
@@ -36,12 +33,14 @@ class SiswaController
         'agama' => $siswa['agama'],
         'telepon' => $siswa['telepon'],
         'user_account' => [
+          'id' => $siswa['id_users'],
           'username' => $siswa['username'],
           'email' => $siswa['email'],
           'role' => $siswa['role'],
           'status' => $siswa['status']
         ],
         'kelas' => [
+          'id' => $siswa['id_kelas'],
           'nama_kelas' => $siswa['nama_kelas'],
           'guru' => $siswa['guru']
         ],
@@ -90,12 +89,14 @@ class SiswaController
       'agama' => $siswa['agama'],
       'telepon' => $siswa['telepon'],
       'user_account' => [
+        'id' => $siswa['id_users'],
         'username' => $siswa['username'],
         'email' => $siswa['email'],
         'role' => $siswa['role'],
         'status' => $siswa['status']
       ],
       'kelas' => [
+        'id' => $siswa['id_kelas'],
         'nama_kelas' => $siswa['nama_kelas'],
         'guru' => $siswa['guru']
       ],

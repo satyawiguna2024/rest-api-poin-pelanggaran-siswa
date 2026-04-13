@@ -20,12 +20,32 @@ class GuruController
   // mengambil semua data guru
   public function index(Request $request, Response $response)
   {
-    $gurus = $this->guruRepo->findAll();
+    $guruData = $this->guruRepo->findAll();
+
+    $data = array_map(function ($guru) {
+      return [
+        'nuptk' => $guru['nuptk'],
+        'nama' => $guru['nama'],
+        'alamat' => $guru['alamat'],
+        'tanggal_lahir' => $guru['tanggal_lahir'],
+        'jenis_kelamin' => $guru['jenis_kelamin'],
+        'agama' => $guru['agama'],
+        'telepon' => $guru['telepon'],
+        'jabatan' => $guru['jabatan'],
+        'user_account' => [
+          'id' => $guru['id'],
+          'username' => $guru['username'],
+          'email' => $guru['email'],
+          'role' => $guru['role'],
+          'status' => $guru['status']
+        ]
+      ];
+    }, $guruData);
 
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan semua data Guru',
       'status' => 'success',
-      'data' => $gurus
+      'data' => $data
     ]));
 
     return $response->withStatus(200);
@@ -45,10 +65,28 @@ class GuruController
       return $response->withStatus(404);
     }
 
+    $data = [
+      'nuptk' => $guru['nuptk'],
+      'nama' => $guru['nama'],
+      'alamat' => $guru['alamat'],
+      'tanggal_lahir' => $guru['tanggal_lahir'],
+      'jenis_kelamin' => $guru['jenis_kelamin'],
+      'agama' => $guru['agama'],
+      'telepon' => $guru['telepon'],
+      'jabatan' => $guru['jabatan'],
+      'user_account' => [
+        'id' => $guru['id'],
+        'username' => $guru['username'],
+        'email' => $guru['email'],
+        'role' => $guru['role'],
+        'status' => $guru['status']
+      ]
+    ];
+
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan data guru',
       'status' => 'success',
-      'data' => $guru
+      'data' => $data
     ]));
 
     return $response->withStatus(200);
