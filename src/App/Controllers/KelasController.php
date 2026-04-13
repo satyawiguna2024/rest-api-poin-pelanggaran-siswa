@@ -75,25 +75,29 @@ class KelasController
   public function index(Request $request, Response $response)
   {
     $kelasData = $this->kelasRepo->findAll();
+    $groupedSiswa = $this->kelasRepo->getAllSiswaGroupedByKelas();
 
-    $data = array_map(function ($kelas) {
+    $data = array_map(function ($kelas) use ($groupedSiswa) {
       return [
         'id' => $kelas['id'],
         'nama_kelas' => $kelas['nama_kelas'],
-        'created_at' => $kelas['created_at'],
-        'updated_at' => $kelas['updated_at'],
+        'jumlah_siswa' => $kelas['jumlah_siswa'],
         'guru' => [
           'nuptk' => $kelas['nuptk'],
           'nama' => $kelas['nama'],
           'telepon' => $kelas['telepon'],
           'jabatan' => $kelas['jabatan']
         ],
+        'siswa' => $groupedSiswa[$kelas['id']] ?? [],
+        'created_at' => $kelas['created_at'],
+        'updated_at' => $kelas['updated_at'],
       ];
     }, $kelasData);
 
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan data kelas',
       'status' => 'success',
+      'items' => $kelasData[0]['total_data'],
       'data' => $data
     ]));
 
@@ -115,15 +119,17 @@ class KelasController
 
     $data = [
       'id' => $kelas['id'],
-      'id' => $kelas['nama_kelas'],
-      'created_at' => $kelas['created_at'],
-      'updated_at' => $kelas['updated_at'],
+      'nama_kelas' => $kelas['nama_kelas'],
+      'jumlah_siswa' => $kelas['jumlah_siswa'],
       'guru' => [
         'nuptk' => $kelas['nuptk'],
         'nama' => $kelas['nama'],
         'telepon' => $kelas['telepon'],
         'jabatan' => $kelas['jabatan']
       ],
+      'siswa' => $this->kelasRepo->getSiswaByKelasId($id),
+      'created_at' => $kelas['created_at'],
+      'updated_at' => $kelas['updated_at'],
     ];
 
     $response->getBody()->write(json_encode([

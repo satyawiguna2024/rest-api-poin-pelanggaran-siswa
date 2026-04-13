@@ -35,7 +35,9 @@ class JenisPelanggaranRepositories
   public function findAll()
   {
     $stmt = $this->db->prepare("
-      SELECT id, nama_pelanggaran, poin, created_at, updated_at
+      SELECT 
+        id, nama_pelanggaran, poin, created_at, updated_at,
+        COUNT(id) OVER() as total_data
       FROM jenis_pelanggaran
       ORDER BY id ASC
     ");

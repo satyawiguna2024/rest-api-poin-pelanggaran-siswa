@@ -21,6 +21,7 @@ class SiswaController
   public function index(Request $request, Response $response)
   {
     $siswaData = $this->siswaRepo->findAll();
+    $totalData = !empty($siswaData) ? $siswaData[0]['total_data'] : 0;
 
     $data = array_map(function ($siswa) {
       return [
@@ -60,6 +61,7 @@ class SiswaController
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan semua siswa',
       'status' => 'success',
+      'items' => $totalData,
       'data'    => $data
     ]));
 

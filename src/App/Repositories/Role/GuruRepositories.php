@@ -21,7 +21,8 @@ class GuruRepositories
     $stmt = $this->db->prepare("
       SELECT
         u.id, u.username, u.email, u.role, u.status,
-        g.nuptk, g.nama, g.alamat, g.tanggal_lahir, g.jenis_kelamin, g.agama, g.telepon, g.jabatan
+        g.nuptk, g.nama, g.alamat, g.tanggal_lahir, g.jenis_kelamin, g.agama, g.telepon, g.jabatan,
+        COUNT(*) OVER() as total_data
       FROM users u
       JOIN guru g ON g.id_users = u.id
       WHERE u.role = 'guru'

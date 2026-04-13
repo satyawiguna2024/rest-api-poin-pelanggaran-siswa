@@ -20,10 +20,12 @@ class AdminController
   public function index(Request $request, Response $response)
   {
     $admins = $this->adminRepo->findAll();
+    $totalData = !empty($admins) ? $admins[0]['total_data'] : 0;
 
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan semua data Admin',
       'status' => 'success',
+      'items' => $totalData,
       'data' => $admins
     ]));
 

@@ -21,7 +21,8 @@ class AdminRepositories
     $stmt = $this->db->prepare("
       SELECT
         u.id, u.username, u.email, u.role, u.status,
-        a.nuptk, a.nama, a.alamat, a.tanggal_lahir, a.jenis_kelamin, a.agama, a.telepon, a.jabatan
+        a.nuptk, a.nama, a.alamat, a.tanggal_lahir, a.jenis_kelamin, a.agama, a.telepon, a.jabatan,
+        COUNT(*) OVER() as total_data
       FROM users u
       JOIN admin a ON a.id_users = u.id
       WHERE u.role = 'admin'

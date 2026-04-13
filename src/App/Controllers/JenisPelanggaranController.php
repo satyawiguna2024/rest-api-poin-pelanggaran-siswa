@@ -24,6 +24,7 @@ class JenisPelanggaranController
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan semua data jenis pelanggaran',
       'status'  => 'success',
+      'items' => $data[0]['total_data'],
       'data' => $data
     ]));
 

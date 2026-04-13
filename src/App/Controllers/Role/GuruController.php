@@ -21,6 +21,7 @@ class GuruController
   public function index(Request $request, Response $response)
   {
     $guruData = $this->guruRepo->findAll();
+    $totalData = !empty($guruData) ? $guruData[0]['total_data'] : 0;
 
     $data = array_map(function ($guru) {
       return [
@@ -45,6 +46,7 @@ class GuruController
     $response->getBody()->write(json_encode([
       'message' => 'Berhasil mendapatkan semua data Guru',
       'status' => 'success',
+      'items' => $totalData,
       'data' => $data
     ]));
 
