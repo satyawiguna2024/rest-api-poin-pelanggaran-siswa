@@ -87,7 +87,7 @@ class KelasRepositories
   {
     $stmt = $this->db->prepare("
       SELECT 
-        s.id_kelas, s.id_users, s.nis, s.nama, s.jenis_kelamin, s.agama, s.telepon, s.alamat,
+        s.id_kelas, s.id_users, s.nis, s.nama, s.jenis_kelamin, s.agama, s.telepon, s.alamat, s.tanggal_lahir,
         o.id as id_ortu, o.nama_ayah, o.nama_ibu, o.pekerjaan_ayah, o.pekerjaan_ibu, o.telepon_ayah, o.telepon_ibu, o.alamat_ayah, o.alamat_ibu
       FROM siswa s
       LEFT JOIN ortu_wali_siswa o ON o.id = s.id_ortu_wali_siswa
@@ -105,6 +105,7 @@ class KelasRepositories
         'nis' => $siswa['nis'],
         'nama' => $siswa['nama'],
         'jenis_kelamin' => $siswa['jenis_kelamin'],
+        'tanggal_lahir' => $siswa['tanggal_lahir'],
         'agama' => $siswa['agama'],
         'telepon' => $siswa['telepon'],
         'alamat' => $siswa['alamat'],
@@ -128,7 +129,7 @@ class KelasRepositories
   {
     $stmt = $this->db->prepare("
       SELECT 
-        s.id_users, s.nis, s.nama, s.jenis_kelamin, s.agama, s.telepon, s.alamat,
+        s.id_users, s.nis, s.nama, s.jenis_kelamin, s.agama, s.telepon, s.alamat, s.tanggal_lahir,
         o.id as id_ortu, o.nama_ayah, o.nama_ibu, o.pekerjaan_ayah, o.pekerjaan_ibu, o.telepon_ayah, o.telepon_ibu, o.alamat_ayah, o.alamat_ibu
       FROM siswa s
       LEFT JOIN ortu_wali_siswa o ON o.id = s.id_ortu_wali_siswa
@@ -144,6 +145,7 @@ class KelasRepositories
         'nis' => $siswa['nis'],
         'nama' => $siswa['nama'],
         'jenis_kelamin' => $siswa['jenis_kelamin'],
+        'tanggal_lahir' => $siswa['tanggal_lahir'],
         'agama' => $siswa['agama'],
         'telepon' => $siswa['telepon'],
         'alamat' => $siswa['alamat'],
