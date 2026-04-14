@@ -3,6 +3,7 @@
 use App\Controllers\AuthController;
 use App\Controllers\JenisPelanggaranController;
 use App\Controllers\KelasController;
+use App\Controllers\PelanggaranSiswaController;
 use App\Controllers\Role\AdminController;
 use App\Controllers\Role\GuruController;
 use App\Controllers\Role\SiswaController;
@@ -63,6 +64,14 @@ return function (App $app) {
         $group->get('/{id}', [JenisPelanggaranController::class, 'show']);
         $group->put('/{id}', [JenisPelanggaranController::class, 'update']);
         $group->delete('/{id}', [JenisPelanggaranController::class, 'destroy']);
+    });
+
+    //? pelanggaran siswa
+    $app->group('/api/pelanggaran-siswa', function ($group) {
+        $group->post('', [PelanggaranSiswaController::class, 'create']);
+        $group->get('', [PelanggaranSiswaController::class, 'index']);
+        $group->get('/{id}', [PelanggaranSiswaController::class, 'show']);
+        $group->put('/{id}', [PelanggaranSiswaController::class, 'update']);
     });
 
 
