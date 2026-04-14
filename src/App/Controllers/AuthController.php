@@ -43,7 +43,7 @@ class AuthController
     $payload = [
       'id' => $user['id'],
       'role' => $user['role'],
-      'exp' => time() + (60 * 60) // 1 jam
+      'exp' => time() + (60 * 60 * 24) // 1 hari
     ];
 
     // jwt secret
