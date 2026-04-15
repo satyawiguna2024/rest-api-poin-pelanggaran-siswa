@@ -14,7 +14,8 @@ use Slim\App;
 return function (App $app) {
     // Login -> untuk semua (admin, guru, siswa)
     $app->post('/api/auth/login', [AuthController::class, 'login']);
-
+    // $app->post('/api/auth/register-admin', [AuthController::class, 'registerAdmin']);
+    
     // Admin -> membuat users/akun (admin, guru, siswa) -> dibarengi dengan input personal data
     $app->group('/api', function ($group) {
         //? group create users - only admin
