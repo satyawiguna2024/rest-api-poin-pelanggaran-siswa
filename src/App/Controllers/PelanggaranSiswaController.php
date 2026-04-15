@@ -60,16 +60,4 @@ class PelanggaranSiswaController
 
     return $response->withHeader('Content-Type', 'application/json');
   }
-
-  // DELETE
-  // public function delete(Request $request, Response $response, $args)
-  // {
-  //   $this->repo->delete($args['id']);
-
-  //   $response->getBody()->write(json_encode([
-  //     "message" => "Data berhasil dihapus"
-  //   ]));
-
-  //   return $response->withHeader('Content-Type', 'application/json');
-  // }
 }

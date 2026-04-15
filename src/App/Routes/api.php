@@ -47,7 +47,7 @@ return function (App $app) {
             $siswa->put('/{id}', [SiswaController::class, 'update']);
             $siswa->delete('/{id}', [SiswaController::class, 'destroy']);
         });
-    })->add(new RoleMiddleware(['admin']))->add(new JwtMiddleware());
+    })->add(new RoleMiddleware(['admin', 'guru', "siswa"]))->add(new JwtMiddleware());
 
     //? (create, read, read by id, update) kelas
     $app->group('/api/kelas', function ($group) {
